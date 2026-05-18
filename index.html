@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>关木｜AI 原生个人操作系统</title>
+  <meta name="description" content="根据长期记忆、问题与回答沉淀出的关木个人知识系统：AI 原生系统、Agent Memory、Skills、写作、视觉化产物与创作工作流。" />
+  <meta name="theme-color" content="#f5f0e8" />
+  <style>
+    :root{
+      --bg:#f5f0e8;--paper:#fffaf1;--paper-2:#fdf7ec;--ink:#191714;--muted:#6f675d;--line:#ded3c4;
+      --accent:#635bff;--accent-2:#7c3aed;--blue:#2563eb;--gold:#a96f20;--green:#16794c;
+      --shadow:0 18px 60px rgba(56,40,20,.10);--radius:28px;--radius-sm:18px;--max:1180px;
+      --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+      --sans: -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+    }
+    html[data-theme="dark"]{
+      --bg:#10131a;--paper:#171b24;--paper-2:#1e2430;--ink:#f7f1e8;--muted:#b9b1a7;--line:#313846;
+      --accent:#8b86ff;--accent-2:#a78bfa;--blue:#7aa2ff;--gold:#e0ae62;--green:#6ee7b7;
+      --shadow:0 18px 60px rgba(0,0,0,.32);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:
+      radial-gradient(circle at 10% 0%, rgba(99,91,255,.13), transparent 34rem),
+      radial-gradient(circle at 86% 8%, rgba(169,111,32,.13), transparent 30rem),
+      var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 18px}
+    header{position:sticky;top:0;z-index:20;backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--line)}
+    .nav{height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-weight:800;letter-spacing:-.03em;display:flex;align-items:center;gap:10px}
+    .mark{width:32px;height:32px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--gold));box-shadow:0 8px 24px rgba(99,91,255,.25)}
+    .navlinks{display:none;gap:18px;color:var(--muted);font-size:14px}
+    .toggle{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 12px;cursor:pointer}
+    .hero{padding:58px 0 34px}
+    .hero-grid{display:grid;gap:22px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:color-mix(in srgb,var(--paper) 78%,transparent);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:13px}
+    h1{font-size:clamp(42px,9vw,94px);line-height:.94;margin:22px 0 20px;letter-spacing:-.075em}
+    .lead{font-size:clamp(18px,2.6vw,26px);max-width:860px;color:var(--muted);line-height:1.55;margin:0}
+    .strong{color:var(--ink);font-weight:760}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+    .btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:12px 18px;border:1px solid var(--line);background:var(--paper);font-weight:700;box-shadow:0 8px 28px rgba(40,30,20,.06)}
+    .btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+    .panel{border:1px solid var(--line);background:linear-gradient(180deg,var(--paper),var(--paper-2));border-radius:var(--radius);box-shadow:var(--shadow)}
+    .manifesto{padding:24px;position:relative;overflow:hidden}
+    .manifesto:after{content:"";position:absolute;inset:auto -20% -45% 30%;height:280px;background:radial-gradient(circle,rgba(99,91,255,.16),transparent 70%);pointer-events:none}
+    .manifesto h2{font-size:28px;margin:0 0 10px;letter-spacing:-.04em}
+    .quote{font-size:22px;line-height:1.45;margin:12px 0;color:var(--ink);font-weight:760}
+    .small{font-size:14px;color:var(--muted)}
+    section{padding:38px 0}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}
+    .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:800}
+    h2{font-size:clamp(28px,5vw,48px);line-height:1.05;letter-spacing:-.055em;margin:6px 0 0}
+    .section-desc{max-width:650px;color:var(--muted);margin:10px 0 0}
+    .grid{display:grid;gap:14px}
+    .grid.two,.grid.three,.grid.four{grid-template-columns:1fr}
+    .card{border:1px solid var(--line);background:color-mix(in srgb,var(--paper) 90%,transparent);border-radius:var(--radius-sm);padding:20px;box-shadow:0 10px 36px rgba(30,20,10,.05)}
+    .card h3{margin:0 0 8px;font-size:20px;letter-spacing:-.03em}
+    .card p{margin:0;color:var(--muted)}
+    .num{font-family:var(--mono);font-weight:900;color:var(--accent);font-size:13px;margin-bottom:8px}
+    .score{display:flex;gap:8px;align-items:center;margin-top:14px}
+    .bar{height:9px;flex:1;border-radius:99px;background:var(--line);overflow:hidden}
+    .bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+    .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .tag{border:1px solid var(--line);background:var(--paper-2);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:13px}
+    .system{padding:22px}
+    .flow{display:grid;gap:12px;margin-top:12px}
+    .node{position:relative;border:1px solid var(--line);background:var(--paper);border-radius:18px;padding:16px}
+    .node b{display:block;margin-bottom:4px}
+    .node small{color:var(--muted)}
+    .arrow{display:none;color:var(--muted);font-family:var(--mono)}
+    .matrix{overflow:auto;border-radius:var(--radius-sm);border:1px solid var(--line)}
+    table{width:100%;border-collapse:collapse;min-width:760px;background:var(--paper)}
+    th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+    th{font-size:13px;color:var(--muted);font-family:var(--mono);font-weight:800;background:var(--paper-2)}
+    td{font-size:15px}
+    tr:last-child td{border-bottom:0}
+    .timeline{position:relative;display:grid;gap:14px}
+    .step{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}
+    .dot{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--bg);font-family:var(--mono);font-weight:900}
+    .step .card{padding:16px}
+    .artifact{display:flex;flex-direction:column;gap:12px;min-height:100%}
+    .artifact .icon{width:44px;height:44px;border-radius:15px;background:color-mix(in srgb,var(--accent) 16%,var(--paper));display:grid;place-items:center;font-size:22px}
+    .rule{border-left:4px solid var(--accent);padding-left:14px;color:var(--muted)}
+    .footer{padding:40px 0 52px;color:var(--muted);font-size:14px}
+    .footer .line{height:1px;background:var(--line);margin-bottom:20px}
+    .aside{font-family:var(--mono);font-size:13px;color:var(--muted)}
+    .highlight{color:var(--accent);font-weight:800}
+    .privacy{border:1px dashed color-mix(in srgb,var(--gold) 55%,var(--line));background:color-mix(in srgb,var(--gold) 8%,var(--paper));border-radius:18px;padding:16px;color:var(--muted)}
+    @media (min-width:760px){
+      .navlinks{display:flex}
+      .hero{padding:82px 0 48px}
+      .hero-grid{grid-template-columns:1.12fr .88fr;align-items:end}
+      .grid.two{grid-template-columns:repeat(2,1fr)}
+      .grid.three{grid-template-columns:repeat(3,1fr)}
+      .grid.four{grid-template-columns:repeat(4,1fr)}
+      .flow{grid-template-columns:repeat(6,1fr);align-items:stretch}
+      .arrow{display:grid;place-items:center}
+      .node{min-height:136px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="返回顶部"><span class="mark"></span><span>Guanmu OS</span></a>
+      <nav class="navlinks" aria-label="页面导航">
+        <a href="#map">系统地图</a><a href="#themes">高频主题</a><a href="#methods">方法论</a><a href="#artifacts">产物</a><a href="#roadmap">路线</a>
+      </nav>
+      <button class="toggle" id="themeBtn" type="button">切换模式</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Memory · Skills · Agent-first · Visual Artifact</span>
+          <h1>关木的<br/>AI 原生个人操作系统</h1>
+          <p class="lead">
+            这不是一份“个人简介”，而是把长期记忆、反复提出的问题、持续打磨的答案，压缩成一个可运行的知识系统：
+            <span class="strong">用记忆定义方向，用问题驱动研究，用 Skill 固化能力，用作品建立外部接口。</span>
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#map">查看系统结构</a>
+            <a class="btn" href="#roadmap">下一步行动</a>
+          </div>
+        </div>
+        <aside class="panel manifesto">
+          <div class="kicker">Core Thesis</div>
+          <h2>记忆不是仓库，记忆是操作系统。</h2>
+          <p class="quote">一个人真正的复利，不来自保存了多少内容，而来自能否把内容变成判断、流程、工具和作品。</p>
+          <p class="small">公开版页面：刻意保留长期方向、方法论与作品结构；不放入邮箱、公司内部细节或不适合公开传播的私人信息。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap grid four">
+        <div class="card"><div class="num">01</div><h3>AI 原生系统设计者</h3><p>关注 Agent-first、Memory、Skills、Harness、RAG 与企业 AI 治理，把 AI 当作新型运行系统而非单点工具。</p></div>
+        <div class="card"><div class="num">02</div><h3>技术传播者</h3><p>擅长把复杂技术转译成文章、课程、视频、封面、HTML 信息界面和可复用方法论。</p></div>
+        <div class="card"><div class="num">03</div><h3>知识系统架构师</h3><p>长期把知识库、记忆、工作流、产物与学习路径组织成可持续演化的个人系统。</p></div>
+        <div class="card"><div class="num">04</div><h3>Artifact-first Builder</h3><p>偏好直接生成可打开、可运行、可复用、可发布的作品，而不是停留在抽象讨论。</p></div>
+      </div>
+    </section>
+
+    <section id="map">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">System Map</div><h2>这份记忆最像什么系统？</h2><p class="section-desc">它最像一个正在形成的“AI Native Personal OS”：记忆负责身份与约束，问题负责探索方向，方法论负责稳定产出，作品负责对外交换价值。</p></div>
+        </div>
+        <div class="panel system">
+          <div class="flow" aria-label="关木系统流程">
+            <div class="node"><b>Memory</b><small>长期偏好、项目脉络、审美、写作风格、边界与反复出现的判断。</small></div>
+            <div class="arrow">→</div>
+            <div class="node"><b>Problems</b><small>Agent Memory 怎么做？Skills 怎么压缩？内容如何去 AI 味？AI 时代个人如何定位？</small></div>
+            <div class="arrow">→</div>
+            <div class="node"><b>Methods</b><small>框架学习法、迁移学习、最小可运行例子、Goal / Spec / Done When / Review Chain。</small></div>
+            <div class="arrow">→</div>
+            <div class="node"><b>Artifacts</b><small>文章、HTML 页面、封面、视频脚本、Skill、Workflow、Checklist、项目原型。</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="themes">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">High-frequency Themes</div><h2>高频主题不是分散兴趣，而是一条主线。</h2><p class="section-desc">核心主线：把 AI 从“对话工具”推进到“可治理、可复用、可审计、可产出”的个人与组织操作系统。</p></div>
+        </div>
+        <div class="matrix">
+          <table>
+            <thead><tr><th>主题</th><th>你真正关心的问题</th><th>沉淀形态</th><th>战略价值</th></tr></thead>
+            <tbody>
+              <tr><td><b>Agent Memory</b></td><td>记忆如何被召回、审计、压缩、遗忘，并影响真实决策？</td><td>Memory Index / Context Pack / Promotion Rules</td><td>让 AI 助手从“聊天记录”升级为“持续协作系统”。</td></tr>
+              <tr><td><b>Skills / Skills Suite</b></td><td>如何把一次性经验压缩成 Agent 可稳定调用的能力？</td><td>SKILL.md / Red Flags / Output Contract / Checklist</td><td>把个人经验变成可复制的执行资产。</td></tr>
+              <tr><td><b>Harness Engineering</b></td><td>如何用约束、环境、反馈和目标控制 AI 长任务？</td><td>Goal / Spec / Run / Review / Trace</td><td>让 AI 不只是生成内容，而是在系统中可靠完成结果。</td></tr>
+              <tr><td><b>Visual Artifact</b></td><td>复杂知识如何变成浏览器里可理解、可展示、可复用的信息界面？</td><td>移动端优先单文件 HTML / 报告页 / 架构图页</td><td>把思考从文本升级为可传播的知识产品。</td></tr>
+              <tr><td><b>AI 内容创作</b></td><td>如何做出有趣、有知识、有洞察、有收获的视频和文章？</td><td>选题框架 / 口播脚本 / 分镜 / 封面系统</td><td>把技术深度转化为大众可进入的叙事入口。</td></tr>
+              <tr><td><b>Enterprise AI</b></td><td>AI 平台如何连接人、工具、数据、流程、治理和业务结果？</td><td>Dify / RAG / Langfuse / Grafana / Meilisearch 等实践模型</td><td>把个人方法论映射到企业级 AI 原生系统。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="methods">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">Stable Methodology</div><h2>你的稳定方法论：先建结构，再追求表达。</h2><p class="section-desc">你的问题通常不是“怎么做一个东西”，而是“如何把一个东西变成可重复、可治理、可迁移的系统”。</p></div>
+        </div>
+        <div class="grid three">
+          <div class="card">
+            <h3>学习三件套</h3>
+            <p>有趣作品入口 → 框架拆解 → 迁移到已有经验 → 渐进式最小可运行例子 → 可组合小项目 → 真实场景验证。</p>
+            <div class="tagrow"><span class="tag">Randy Pausch</span><span class="tag">Framework</span><span class="tag">Transfer</span><span class="tag">MRE</span></div>
+          </div>
+          <div class="card">
+            <h3>工程治理链</h3>
+            <p>Goal Review → Plan Review → Code Review → Result Review。Done When 是刹车系统，防止 AI 过早停止或无限扩张。</p>
+            <div class="tagrow"><span class="tag">Goal</span><span class="tag">Spec</span><span class="tag">Done When</span><span class="tag">Review Chain</span></div>
+          </div>
+          <div class="card">
+            <h3>Skill 压缩法</h3>
+            <p>Skill = Concept Anchors + Local Rules + Red Flags + Output Contract + Checklist。目标不是变短，而是提高单位 token 的执行密度。</p>
+            <div class="tagrow"><span class="tag">Concept Anchor</span><span class="tag">Rules</span><span class="tag">Checklist</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="artifacts">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">Repeated Outputs</div><h2>你反复创造的不是内容，而是内容机器。</h2><p class="section-desc">这些产物的共同点是：它们既能表达观点，也能反过来训练你的系统。</p></div>
+        </div>
+        <div class="grid four">
+          <div class="card artifact"><div class="icon">✦</div><h3>深度文章</h3><p>AI 原生系统、Agent-first、Skills、Memory、商业判断与技术传播。</p></div>
+          <div class="card artifact"><div class="icon">▧</div><h3>HTML 信息界面</h3><p>移动端优先、可打开、可保存、可展示，用结构承载知识。</p></div>
+          <div class="card artifact"><div class="icon">◈</div><h3>封面系统</h3><p>高端杂志式、少字、强主视觉、强隐喻，避免信息图堆叠。</p></div>
+          <div class="card artifact"><div class="icon">⌘</div><h3>Skill / Workflow</h3><p>把经验固化为 Agent 可执行的流程、模板、规则与验收标准。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap grid two">
+        <div class="panel manifesto">
+          <div class="kicker">Productive Tensions</div>
+          <h2>你的生产性矛盾</h2>
+          <p class="rule">你既想做深度系统，又想做能被传播的作品；既追求工程严谨，又反感技术文章变成概念堆叠；既想建设个人 OS，又要避免它变成过度复杂的自我管理玩具。</p>
+          <p class="small">这不是缺点，而是你的创作引擎：深度提供护城河，传播提供外部反馈，系统提供复利。</p>
+        </div>
+        <div class="panel manifesto">
+          <div class="kicker">Positioning</div>
+          <h2>最清晰的定位</h2>
+          <p class="quote">用工程师的系统能力，做技术传播者的公共表达；用创作者的作品意识，倒逼 AI 原生系统的真实落地。</p>
+          <p class="small">这比单纯定位“AI 博主”“前端工程师”“工具作者”更准确。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">Next Step</div><h2>下一步最应该做的一件事</h2><p class="section-desc">不要继续扩散主题。先把“关木 AI 原生个人操作系统”做成一个可持续更新的公开入口。</p></div>
+        </div>
+        <div class="timeline">
+          <div class="step"><div class="dot">1</div><div class="card"><h3>建立主页入口</h3><p>当前页面就是第一版。它不是简历页，而是你的个人操作系统目录。</p></div></div>
+          <div class="step"><div class="dot">2</div><div class="card"><h3>沉淀 5 个核心 Skill</h3><p>memory-mining、visual-artifact、skill-compression-review、gm-de-ai-article、content-studio-workflow。</p></div></div>
+          <div class="step"><div class="dot">3</div><div class="card"><h3>做一个可复用案例库</h3><p>每个主题都配套：问题 → 方法 → HTML 产物 → 封面 → 文章/视频 → 复盘。</p></div></div>
+          <div class="step"><div class="dot">4</div><div class="card"><h3>把公开表达和系统建设合并</h3><p>每篇文章都反哺一个 Skill，每个 Skill 都反哺一个工作流，每个工作流都产出一个作品。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="privacy">
+          <b>公开发布原则：</b>
+          这个页面是 public-safe 版本。它强调长期方向、方法论、作品系统和可公开项目，不展示邮箱、公司内部细节、私人上下文或不适合公开传播的记忆内容。
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="line"></div>
+      <p><b>关木 Guanmu</b> · AI Native Personal OS · Built from memory, questions, answers and artifacts.</p>
+      <p class="aside">Generated as a single-file visual artifact. Last updated: 2026-05-18.</p>
+    </div>
+  </footer>
+
+  <script>
+    const root = document.documentElement;
+    const saved = localStorage.getItem("guanmu-theme");
+    if (saved) root.setAttribute("data-theme", saved);
+    document.getElementById("themeBtn").addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("guanmu-theme", next);
+    });
+  </script>
+</body>
+</html>
